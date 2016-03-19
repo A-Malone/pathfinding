@@ -25,3 +25,21 @@ protected:
         Node* end
     );
 };
+
+template <class A, class B, class Compare>
+class CompareMap : public std::unordered_map<A,B>
+{
+private:
+    Compare c;
+
+public:
+    explicit CompareMap(Compare c_ = Compare()) 
+        :std::unordered_map<A,B>()
+        ,c(c_)
+        {};
+
+    bool operator()(A a, A b)
+    {
+        return c(this->at(a), this->at(b));
+    };
+};
