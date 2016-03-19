@@ -2,7 +2,7 @@
 
 #include "solver.hpp"
 
-class AStar
+class AStar : Solver
 {
 public:
     std::vector<Node*> get_path

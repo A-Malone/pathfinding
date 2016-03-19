@@ -4,7 +4,7 @@
 class Solver
 {
 public:
-    virtual const std::vector<Node*>& get_path
+    virtual std::vector<Node*> get_path
     (
         const Terrain& terrain,
         std::pair<int,int> p1,

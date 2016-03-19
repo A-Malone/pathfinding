@@ -23,8 +23,8 @@ Terrain::~Terrain()
 }
 
 Node* Terrain::at(int x, int y) const
-{
-     return m_map.at(x).at(y);
+{    
+    return m_map.at(x).at(y);
 }
 
 Node* Terrain::at(std::pair<int,int> p) const
@@ -32,7 +32,7 @@ Node* Terrain::at(std::pair<int,int> p) const
     return m_map.at(p.first).at(p.second);
 }
 
-const std::vector<Node*>& Terrain::neighbours(Node* node) const
+std::vector<Node*> Terrain::neighbours(Node* node) const
 {
     std::vector<Node*> nodes;
     if (node->x > 0)

@@ -28,7 +28,7 @@ public:
     Node* at(int x, int y) const;
     Node* at(std::pair<int,int> p) const;
 
-    const std::vector<Node*>& neighbours(Node* node) const;
+    std::vector<Node*> neighbours(Node* node) const;
 
 
 private:

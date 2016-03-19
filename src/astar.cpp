@@ -24,11 +24,11 @@ std::vector<Node*> AStar::get_path
     std::unordered_set<Node*> closed_set;
 
     // Create the backing container for heap
-    auto node_comp = [&](Node* left, Node* right) { return f_score[left] > f_score[right];};
+    auto node_comp = [&](Node* left, Node* right) { return f_score[left] < f_score[right];};
     std::vector<Node*> open_set;
 
     open_set.push_back(start);
-    std::make_heap (open_set.begin(),open_set.end(), node_comp);
+    std::make_heap(open_set.begin(), open_set.end(), node_comp);
 
     std::unordered_map<Node*,Node*> came_from;
 
@@ -41,6 +41,9 @@ std::vector<Node*> AStar::get_path
         Node* current = open_set.front();
         std::pop_heap(open_set.begin(), open_set.end(), node_comp);
         open_set.pop_back();
+
+        for (auto n : open_set) std::cout << f_score[n] << " ";
+        std::cout << std::endl;
 
         if(current == end)
         {
@@ -83,7 +86,7 @@ int AStar::heuristic
     std::pair<int,int> p2
 )
 {
-    return std::sqrt(std::pow(p2.first - p1.first, 2) + std::pow(p2.second - p1.second, 2));
+    return sqrt(std::pow(p2.first - p1.first, 2) + std::pow(p2.second - p1.second, 2));
 }
 
 std::vector<Node*> AStar::reconstruct_path
