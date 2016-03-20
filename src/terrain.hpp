@@ -3,13 +3,21 @@
 
 #include "common.hpp"
 
+class NodeData
+{
+	// Base class
+};
+
 struct Node
 {
     int x;
     int y;
     bool wall = false;
 
+    NodeData* data;
+
     Node(int px, int py)
+    : data(nullptr)
     {
         x = px;
         y = py;

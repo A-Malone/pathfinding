@@ -13,7 +13,7 @@ public:
     );
 
 protected:
-    int heuristic
+    float heuristic
     (
         std::pair<int,int> p1,
         std::pair<int,int> p2
@@ -26,20 +26,22 @@ protected:
     );
 };
 
-template <class A, class B, class Compare>
-class CompareMap : public std::unordered_map<A,B>
+class AStarNodeData : public NodeData
 {
-private:
-    Compare c;
-
 public:
-    explicit CompareMap(Compare c_ = Compare()) 
-        :std::unordered_map<A,B>()
-        ,c(c_)
-        {};
+	AStarNodeData(float f, int g) : f_score(f), g_score(g) {};
 
-    bool operator()(A a, A b)
+
+	float f_score;
+
+	// For each node, the cost of getting from the start node to that node.
+	int g_score;
+};
+
+struct node_cmp
+{
+    bool operator()(Node* a, Node* b)
     {
-        return c(this->at(a), this->at(b));
-    };
+    	return static_cast<AStarNodeData*>(a->data)->f_score > static_cast<AStarNodeData*>(b->data)->f_score;
+    }
 };

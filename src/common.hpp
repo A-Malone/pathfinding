@@ -5,6 +5,7 @@
 #include <chrono>
 #include <iostream>
 #include <cmath>
+#include <functional>
 #include <queue>
 #include <thread>
 #include <unordered_map>
