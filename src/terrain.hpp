@@ -33,6 +33,8 @@ public:
     int width() const {return m_width;};
     int height() const {return m_height;};
 
+    bool is_valid(int x, int y) const;
+
     Node* at(int x, int y) const;
     Node* at(std::pair<int,int> p) const;
 
@@ -44,6 +46,8 @@ private:
     int m_height;
 
     std::vector<std::vector<Node*>> m_map;
+
+    void create_obstacle(int x, int y, float r);
 };
 
 #endif /* TERRAIN_H */

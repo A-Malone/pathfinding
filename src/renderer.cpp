@@ -8,7 +8,7 @@
 
 int main()
 {
-    int w = 51;
+    int w = 50;
     int h = 50;
     // Set up terrain
     Terrain terrain(w,h);
@@ -26,7 +26,6 @@ int main()
         std::cout << node->x << " " << node->y << std::endl;
     }
     */
-
 
     sf::RenderWindow window(sf::VideoMode(600, 600), "SFML works!");
 
