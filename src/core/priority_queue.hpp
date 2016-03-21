@@ -1,7 +1,7 @@
 #ifndef PRIORITY_QUEUE_H
 #define PRIORITY_QUEUE_H
 
-#include "common.hpp"
+#include "../common.hpp"
 
 template <class T, class Compare = std::less<T>>
 class PriorityQueue : public std::priority_queue<T, std::vector<T>, Compare>

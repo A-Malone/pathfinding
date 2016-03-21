@@ -7,8 +7,8 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 #include_directories(include)
 
 #However, the file(GLOB...) allows for wildcard additions:
-file(GLOB_RECURSE SOURCES "./src" "src/*.cpp")
-file(GLOB_RECURSE HEADER_FILES "./src" "src/*.hpp")
+file(GLOB_RECURSE SOURCES "src/*.cpp")
+file(GLOB_RECURSE HEADER_FILES "src/*.hpp")
 
 set(EXECUTABLE_NAME "pathfinder")
 add_executable(${EXECUTABLE_NAME} ${HEADER_FILES} ${SOURCES})

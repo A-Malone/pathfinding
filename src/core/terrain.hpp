@@ -1,7 +1,7 @@
 #ifndef TERRAIN_H
 #define TERRAIN_H
 
-#include "common.hpp"
+#include "../common.hpp"
 
 class NodeData
 {

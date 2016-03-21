@@ -1,10 +1,10 @@
 
 #include "renderer.hpp"
 
-#include "terrain.hpp"
-#include "astar.hpp"
-
 #include <SFML/Graphics.hpp>
+
+#include "core/astar.hpp"
+#include "core/terrain.hpp"
 
 int main()
 {

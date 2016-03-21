@@ -1,4 +1,5 @@
-#include "common.hpp"
+#include "../common.hpp"
+
 #include "terrain.hpp"
 
 class Solver

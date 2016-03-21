@@ -1,5 +1,4 @@
 #include "astar.hpp"
-
 #include "priority_queue.hpp"
 
 
