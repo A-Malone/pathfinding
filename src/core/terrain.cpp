@@ -1,9 +1,16 @@
 #include "terrain.hpp"
 
-Terrain::Terrain(int w, int h)
+Terrain::Terrain
+(
+	unsigned int w,
+	unsigned int h,
+	unsigned int sight // = std::numeric_limits<unsigned int>::max())
+)
+	:m_width(w)
+	,m_height(h)
+	,m_sight(sight)
 {
-    m_width = w;
-    m_height = h;
+	m_full_sight = sight > w && sight > h;
 
     for (int x = 0; x < w; ++x)
     {
@@ -11,7 +18,9 @@ Terrain::Terrain(int w, int h)
         col.reserve(h);
         for (int y = 0; y < h; ++y)
         {
-            col.push_back(new Node(x,y));
+        	Node* n = new Node(x,y);
+        	n->seen = m_full_sight;
+            col.push_back(n);
         }
         m_map.push_back(col);
     }
@@ -76,7 +85,7 @@ std::vector<Node*> Terrain::neighbours(Node* node) const
     		if (is_valid(node->x + x, node->y + y) && !(x == y && x == 0))
     		{
     			Node* new_node = at(node->x + x,node->y + y);
-    			if (!new_node->wall)
+    			if (!new_node->is_wall())
     			{
     				nodes.push_back(new_node);
     			}
@@ -84,6 +93,15 @@ std::vector<Node*> Terrain::neighbours(Node* node) const
     	}
     }
     return nodes;
+}
+
+void Terrain::set_current(Node* n)
+{
+	m_current = n;
+	if (!m_full_sight)
+	{
+		update_visible();
+	}
 }
 
 
@@ -99,6 +117,19 @@ void Terrain::create_obstacle(int px, int py, float r)
 			}
 		}
 	}
+}
 
+void Terrain::update_visible()
+{
+	for (int x = m_current->x - m_sight; x <= m_current->x + m_sight; ++x)
+	{
+		for (int y = m_current->y - m_sight; y <= m_current->y + m_sight; ++y)
+		{
+			if (is_valid(x,y))
+			{
+				at(x,y)->seen = true;
+			}
+		}
+	}
 }
 

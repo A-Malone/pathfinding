@@ -1,54 +1,45 @@
 #include "astar.hpp"
-#include "priority_queue.hpp"
+
 
 
 std::vector<Node*> AStar::get_path
 (
-    const Terrain& terrain,
+    Terrain& terrain,
     std::pair<int,int> p1,
     std::pair<int,int> p2
 )
 {
     // Get the starting and ending nodes
     Node* start = terrain.at(p1);
+    terrain.set_current(start);
+
     Node* end = terrain.at(p2);
 
-    start->data = new AStarNodeData(heuristic(p1,p2), 0);
-
-    // Setup the open and closed sets
-    std::unordered_set<Node*> closed_set;
-
-    PriorityQueue<Node*, node_cmp> open_set;
-    open_set.push(start);
+    start->data = new AStarNodeData(0, heuristic(start,end));
+    m_open_set.push(start);
 
     std::unordered_map<Node*,Node*> came_from;
 
     // The return path
     std::vector<Node*> path;
 
-    while (open_set.size() > 0)
+    while (m_open_set.size() > 0)
     {
         // Get the first item in the min-heap
-        Node* current = open_set.top();
-        open_set.pop();
-        
-        // std::cout << "Current : (" << current->x << "," << current->y << ")" << std::endl;
+        Node* current = m_open_set.top();
+        m_open_set.pop();
 
         if (current == end)
         {
             path = reconstruct_path(came_from, end);
         }
 
-        closed_set.insert(current);
+        m_closed_set.insert(current);
         for (Node* neighbor : terrain.neighbours(current))
         {
-            // std::cout << "Neighbour : (" << neighbor->x << "," << neighbor->y << ")" << std::endl;
-
-            bool is_in_open_set = open_set.find(neighbor) != open_set.end();
-            bool is_in_closed_set = closed_set.find(neighbor) != closed_set.end();
+            bool is_in_open_set = m_open_set.find(neighbor) != m_open_set.end();
+            bool is_in_closed_set = m_closed_set.find(neighbor) != m_closed_set.end();
             
-            //std::cout << "in_open:" << is_in_open_set << " in_closed:" << is_in_closed_set << std::endl;
-
             // If it's in the closed set skip
             if (is_in_closed_set)
             {
@@ -65,29 +56,36 @@ std::vector<Node*> AStar::get_path
             // This path is the best until now. Record it!
             came_from[neighbor] = current;
 
+            if (AStarNodeData* data = static_cast<AStarNodeData*>(neighbor->data))
+            {
+            	data->g_score = tentative_g_score;
+            	data->h_score = heuristic(neighbor, end);
+            }
+            else
+            {
+            	neighbor->data = new AStarNodeData(
+						tentative_g_score,
+						heuristic(neighbor, end)
+				);
+            }
 
-            float f_score = tentative_g_score + heuristic(std::make_pair(neighbor->x, neighbor->y), std::make_pair(end->x, end->y));
-            neighbor->data = new AStarNodeData(f_score, tentative_g_score);
-            
             if (!is_in_open_set)
             {
-                open_set.push(neighbor);
+                m_open_set.push(neighbor);
             }
         }
     }
 
-    // std::cout << "Final path" << std::endl;
-    // for (Node* n : path) std::cout << n->x << " " << n->y << std::endl;
     return path;
 }
 
 float AStar::heuristic
 (
-    std::pair<int,int> p1,
-    std::pair<int,int> p2
+    Node* a,
+    Node* b
 )
 {
-    return sqrt(std::pow(p2.first - p1.first, 2) + std::pow(p2.second - p1.second, 2));
+    return sqrt(std::pow(a->x - b->x, 2) + std::pow(a->y - b->y, 2));
 }
 
 std::vector<Node*> AStar::reconstruct_path

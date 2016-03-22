@@ -4,6 +4,7 @@
 #include <SFML/Graphics.hpp>
 
 #include "core/astar.hpp"
+#include "core/rtaa.hpp"
 #include "core/terrain.hpp"
 
 int main()
@@ -11,9 +12,11 @@ int main()
     int w = 50;
     int h = 50;
     // Set up terrain
-    Terrain terrain(w,h);
+    Terrain terrain(w,h, 10);
 
-    AStar solver = AStar();
+    //AStar solver = AStar();
+    RTAA solver = RTAA();
+
     std::vector<Node*> path = solver.get_path(
         terrain,
         std::make_pair(0,0),
@@ -33,8 +36,6 @@ int main()
     window.setFramerateLimit(60);
 
     int side = 5;
-    int space = 5;
-
 
     while (window.isOpen())
     {
@@ -51,13 +52,23 @@ int main()
         {
             for(int y = 0; y < h; ++y)
             {
-                if (terrain.at(x,y)->wall)
+            	Node* node = terrain.at(x,y);
+            	sf::RectangleShape box(sf::Vector2f(side, side));
+            	box.setPosition(x*side, y*side);
+
+                if (node->is_wall())
                 {
-                    sf::RectangleShape box(sf::Vector2f(side, side));
-                    box.setFillColor(sf::Color::White);
-                    box.setPosition(x*(side + space), y*(side + space));
-                    window.draw(box);
+                	box.setFillColor(sf::Color::White);
                 }
+                else if (node->is_seen())
+                {
+                	box.setFillColor(sf::Color(100,100,100));
+                }
+                else
+                {
+                	box.setFillColor(sf::Color::Black);
+                }
+                window.draw(box);
             }
         }
 
@@ -65,7 +76,7 @@ int main()
         {
             sf::RectangleShape box(sf::Vector2f(side, side));
             box.setFillColor(sf::Color::Red);
-            box.setPosition(node->x*(side + space), node->y*(side + space));
+            box.setPosition(node->x*side, node->y*side);
             window.draw(box);
         }
 
