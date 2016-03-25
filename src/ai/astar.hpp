@@ -2,8 +2,8 @@
 #define ASTAR_H
 
 #include "../common.hpp"
+#include "../core/solver.hpp"
 
-#include "solver.hpp"
 #include "priority_queue.hpp"
 
 
@@ -31,9 +31,9 @@ class AStar : Solver
 public:
     std::vector<Node*> get_path
     (
-        Terrain& terrain,
-        std::pair<int,int> p1,
-        std::pair<int,int> p2
+        World& terrain,
+        Node* start,
+        Node* end
     );
 
     std::unordered_set<Node*> m_closed_set;

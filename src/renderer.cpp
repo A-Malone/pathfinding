@@ -1,34 +1,23 @@
-
 #include "renderer.hpp"
 
 #include <SFML/Graphics.hpp>
 
-#include "core/astar.hpp"
-#include "core/rtaa.hpp"
-#include "core/terrain.hpp"
+#include "ai/astar.hpp"
+#include "ai/rtaa.hpp"
+#include "core/world.hpp"
+#include "core/unit.hpp"
 
 int main()
 {
     int w = 50;
     int h = 50;
     // Set up terrain
-    Terrain terrain(w,h, 10);
+    World world(w, h, 10);
 
     //AStar solver = AStar();
     RTAA solver = RTAA();
 
-    std::vector<Node*> path = solver.get_path(
-        terrain,
-        std::make_pair(0,0),
-        std::make_pair(w-1,h-1)
-    );
-
-    /*
-    for (Node* node : path)
-    {
-        std::cout << node->x << " " << node->y << std::endl;
-    }
-    */
+    Unit* unit = world.spawn(0,0);
 
     sf::RenderWindow window(sf::VideoMode(600, 600), "SFML works!");
 
@@ -48,37 +37,48 @@ int main()
 
         window.clear();
 
-        for(int x = 0; x < w; ++x)
+        for (int x = 0; x < w; ++x)
         {
-            for(int y = 0; y < h; ++y)
+            for (int y = 0; y < h; ++y)
             {
-            	Node* node = terrain.at(x,y);
-            	sf::RectangleShape box(sf::Vector2f(side, side));
-            	box.setPosition(x*side, y*side);
+                Node* node = world.at(x, y);
+                sf::RectangleShape box(sf::Vector2f(side, side));
+                box.setPosition(x * side, y * side);
 
                 if (node->is_wall())
                 {
-                	box.setFillColor(sf::Color::White);
+                    box.setFillColor(sf::Color::White);
                 }
                 else if (node->is_seen())
                 {
-                	box.setFillColor(sf::Color(100,100,100));
+                    box.setFillColor(sf::Color(100, 100, 100));
                 }
                 else
                 {
-                	box.setFillColor(sf::Color::Black);
+                    box.setFillColor(sf::Color::Black);
                 }
                 window.draw(box);
             }
         }
 
+        std::vector<Node*> path = solver.get_path(
+            world,
+            world.at(unit->pos()),
+            world.at(w - 1, h - 1)
+        );
+        unit->set_path(path);
+
         for (Node* node : path)
         {
             sf::RectangleShape box(sf::Vector2f(side, side));
             box.setFillColor(sf::Color::Red);
-            box.setPosition(node->x*side, node->y*side);
+            box.setPosition(node->x * side, node->y * side);
             window.draw(box);
         }
+
+        world.step();
+
+        std::this_thread::sleep_for(std::chrono::milliseconds(500));
 
         window.display();
     }

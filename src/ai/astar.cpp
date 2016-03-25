@@ -4,17 +4,11 @@
 
 std::vector<Node*> AStar::get_path
 (
-    Terrain& terrain,
-    std::pair<int,int> p1,
-    std::pair<int,int> p2
+    World& terrain,
+    Node* start,
+    Node* end
 )
 {
-    // Get the starting and ending nodes
-    Node* start = terrain.at(p1);
-    terrain.set_current(start);
-
-    Node* end = terrain.at(p2);
-
     start->data = new AStarNodeData(0, heuristic(start,end));
     m_open_set.push(start);
 
