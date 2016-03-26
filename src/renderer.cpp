@@ -18,7 +18,7 @@ int main()
 
     Unit* unit = world.spawn(0,0);
 
-    sf::RenderWindow window(sf::VideoMode(600, 600), "SFML works!");
+    sf::RenderWindow window(sf::VideoMode(600, 600), "Pathfinding");
 
     // Limit the framerate to 60 frames per second (this step is optional)
     window.setFramerateLimit(60);
@@ -40,13 +40,13 @@ int main()
         window.display();
 
         std::vector<Node*> path = solver.get_path(
-			world,
-			world.at(unit->pos()),
-			world.at(w - 1, h - 1)
-		);
-		unit->set_path(path);
+            world,
+            world.at(unit->pos()),
+            world.at(w - 1, h - 1)
+        );
+        unit->set_path(path);
 
-		world.step();
+        world.step();
         std::this_thread::sleep_for(std::chrono::milliseconds(500));
     }
 

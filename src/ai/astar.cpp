@@ -25,9 +25,29 @@ std::vector<Node*> AStar::get_path
         m_open_set.erase(current);
         m_open_queue.pop();
 
+        // Short-circuit for the end
+        if (!current->is_seen())
+        {
+            int dist = std::abs(current->x - end->x) + std::abs(current->y - end->y);
+            if (AStarNodeData* data = static_cast<AStarNodeData*>(end->data))
+            {
+                data->g_score = static_cast<AStarNodeData*>(current->data)->g_score + dist;
+                data->h_score = 0;
+            }
+            else
+            {
+                end->data = new AStarNodeData(
+                        static_cast<AStarNodeData*>(current->data)->g_score + dist,
+                        0
+                );
+            }
+            path = reconstruct_path(came_from, current);
+            break;
+        }
         if (current == end)
         {
             path = reconstruct_path(came_from, end);
+            break;
         }
 
         m_closed_set.insert(current);

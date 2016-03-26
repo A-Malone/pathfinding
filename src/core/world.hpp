@@ -58,13 +58,12 @@ public:
     int width() const
     {
         return m_width;
-    }
-    ;
+    };
+
     int height() const
     {
         return m_height;
-    }
-    ;
+    };
 
     bool step();
 
