@@ -10,18 +10,20 @@ std::vector<Node*> AStar::get_path
 )
 {
     start->data = new AStarNodeData(0, heuristic(start,end));
-    m_open_set.push(start);
+    m_open_set.insert(start);
+    m_open_queue.push(start);
 
     std::unordered_map<Node*,Node*> came_from;
 
     // The return path
     std::vector<Node*> path;
 
-    while (m_open_set.size() > 0)
+    while (m_open_queue.size() > 0)
     {
         // Get the first item in the min-heap
-        Node* current = m_open_set.top();
-        m_open_set.pop();
+        Node* current = m_open_queue.top();
+        m_open_set.erase(current);
+        m_open_queue.pop();
 
         if (current == end)
         {
@@ -52,20 +54,21 @@ std::vector<Node*> AStar::get_path
 
             if (AStarNodeData* data = static_cast<AStarNodeData*>(neighbor->data))
             {
-            	data->g_score = tentative_g_score;
-            	data->h_score = heuristic(neighbor, end);
+                data->g_score = tentative_g_score;
+                data->h_score = heuristic(neighbor, end);
             }
             else
             {
-            	neighbor->data = new AStarNodeData(
-						tentative_g_score,
-						heuristic(neighbor, end)
-				);
+                neighbor->data = new AStarNodeData(
+                        tentative_g_score,
+                        heuristic(neighbor, end)
+                );
             }
 
             if (!is_in_open_set)
             {
-                m_open_set.push(neighbor);
+                m_open_set.insert(neighbor);
+                m_open_queue.push(neighbor);
             }
         }
     }
@@ -84,7 +87,7 @@ float AStar::heuristic
 
 std::vector<Node*> AStar::reconstruct_path
 (
-    std::unordered_map<Node*,Node*> came_from,
+    const std::unordered_map<Node*,Node*>& came_from,
     Node* end
 )
 {
@@ -94,7 +97,7 @@ std::vector<Node*> AStar::reconstruct_path
     while (came_from.find(current) != came_from.end())
     {
         path.push_back(current);
-        current = came_from[current];
+        current = came_from.at(current);
     }
     path.push_back(current);
 

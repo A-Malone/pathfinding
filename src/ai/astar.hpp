@@ -37,7 +37,10 @@ public:
     );
 
     std::unordered_set<Node*> m_closed_set;
-	PriorityQueue<Node*, node_cmp> m_open_set;
+
+    PriorityQueue<Node*, node_cmp> m_open_queue;
+    std::unordered_set<Node*> m_open_set;
+
 
     float heuristic
     (
@@ -47,7 +50,7 @@ public:
 
     std::vector<Node*> reconstruct_path
     (
-        std::unordered_map<Node*,Node*> came_from,
+        const std::unordered_map<Node*,Node*>& came_from,
         Node* end
     );
 };

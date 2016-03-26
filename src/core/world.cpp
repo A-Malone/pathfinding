@@ -2,9 +2,15 @@
 
 #include "unit.hpp"
 
-World::World(unsigned int w, unsigned int h, unsigned int sight // = std::numeric_limits<unsigned int>::max())
-        ) :
-        m_width(w), m_height(h), m_sight(sight)
+World::World
+(
+    unsigned int w,
+    unsigned int h,
+    unsigned int sight // = std::numeric_limits<unsigned int>::max())
+)
+    :m_width(w)
+    ,m_height(h)
+    ,m_sight(sight)
 {
     m_full_sight = sight > w && sight > h;
 
@@ -21,9 +27,11 @@ World::World(unsigned int w, unsigned int h, unsigned int sight // = std::numeri
         m_map.push_back(col);
     }
 
+    float blob_average = 10.0 / 2500.0 * w * h;
+
     auto blobs_gen =
             std::bind(
-                std::normal_distribution<float>(10.0, 3.0),
+                std::normal_distribution<float>(blob_average, blob_average / 3.0),
                 std::knuth_b(std::chrono::system_clock::now().time_since_epoch().count())
             );
 
@@ -65,6 +73,7 @@ bool World::step()
 Unit* World::spawn(int x, int y)
 {
     m_units.push_back(new Unit(at(x,y)));
+    update_visible();
     return m_units.back();
 };
 
@@ -116,14 +125,64 @@ std::vector<Node*> World::neighbours(Node* node) const
     return nodes;
 }
 
+void World::render(sf::RenderWindow& window, int scale)
+{
+    for (const std::vector<Node*>& col : m_map)
+    {
+        for (Node* node : col)
+        {
+            sf::RectangleShape box(sf::Vector2f(scale, scale));
+            box.setPosition(node->x * scale, node->y * scale);
+
+            if (node->is_wall())
+            {
+                box.setFillColor(sf::Color::White);
+            }
+            else if (node->is_seen())
+            {
+                box.setFillColor(sf::Color(100, 100, 100));
+            }
+            else
+            {
+                box.setFillColor(sf::Color::Black);
+            }
+            window.draw(box);
+        }
+    }
+
+    for (Unit* unit : m_units)
+    {
+        for (Node* node : unit->get_path())
+        {
+            sf::RectangleShape box(sf::Vector2f(scale, scale));
+            box.setFillColor(sf::Color::Red);
+            box.setPosition(node->x * scale, node->y * scale);
+            window.draw(box);
+        }
+
+        sf::RectangleShape box(sf::Vector2f(scale, scale));
+        if(unit->is_idle())
+        {
+            box.setFillColor(sf::Color::Green);
+        }
+        else
+        {
+            box.setFillColor(sf::Color::Yellow);
+        }
+
+        auto pos = unit->pos();
+        box.setPosition(pos.first * scale, pos.second * scale);
+        window.draw(box);
+    }
+}
+
 void World::create_obstacle(int px, int py, float r)
 {
     for (int x = px - r; x <= px + r; ++x)
     {
         for (int y = py - r; y <= py + r; ++y)
         {
-            if (is_valid(x, y)
-                    && sqrt(std::pow(px - x, 2) + std::pow(py - y, 2)) < r)
+            if (is_valid(x, y) && sqrt(std::pow(px - x, 2) + std::pow(py - y, 2)) < r)
             {
                 at(x, y)->wall = true;
             }
@@ -140,7 +199,8 @@ void World::update_visible()
         {
             for (int y = pos.second - m_sight; y <= pos.second + m_sight; ++y)
             {
-                if (is_valid(x, y) && !at(x, y)->seen)
+                bool in_range = sqrt(std::pow(pos.first - x, 2) + std::pow(pos.second - y, 2)) < m_sight;
+                if (is_valid(x, y) && in_range && !at(x, y)->seen)
                 {
                     at(x, y)->seen = true;
                 }

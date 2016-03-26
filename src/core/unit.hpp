@@ -14,7 +14,7 @@ public:
 
     bool is_idle()
     {
-        return m_path.size() > 0;
+        return m_path.size() == 0;
     };
 
     void set_path(const std::vector<Node*>& path)
@@ -36,22 +36,24 @@ protected:
     {
         if (!is_idle())
         {
-            for (int i = 0; i < moves; ++i)
+            int num_moves = std::min(moves + 1, static_cast<int>(m_path.size()));
+            for (int i = 0; i < num_moves; ++i)
             {
-                if (m_path[i]->is_wall())
+                Node* next = m_path[m_path.size() - i - 1];
+                if (next->is_wall())
                 {
                     m_path.clear();
                     break;
                 }
                 else
                 {
-                    m_current = m_path[i];
+                    m_current = next;
                 }
             }
 
             if (!is_idle())
             {
-                m_path.erase(m_path.begin(), m_path.begin() + moves);
+                m_path.erase(m_path.end() - num_moves, m_path.end());
             }
         }
     };

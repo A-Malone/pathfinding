@@ -3,6 +3,8 @@
 
 #include "../common.hpp"
 
+#include <SFML/Graphics.hpp>
+
 // Forward declarations
 class World;
 class Unit;
@@ -75,6 +77,8 @@ public:
 
     std::vector<Node*> neighbours(Node* node) const;
 
+    void render(sf::RenderWindow& window, int scale);
+
 protected:
     unsigned int m_width;
     unsigned int m_height;
@@ -83,7 +87,7 @@ private:
     std::vector<std::vector<Node*>> m_map;
 
     bool m_full_sight;
-    unsigned int m_sight;
+    int m_sight;
 
     std::vector<Unit*> m_units;
 
