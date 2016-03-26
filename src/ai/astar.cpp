@@ -1,19 +1,17 @@
 #include "astar.hpp"
 
-
-
 std::vector<Node*> AStar::get_path
 (
-    World& terrain,
-    Node* start,
-    Node* end
+    Map* terrain,
+    MapNode* start,
+    MapNode* end
 )
 {
-    start->data = new AStarNodeData(0, heuristic(start,end));
-    m_open_set.insert(start);
-    m_open_queue.push(start);
+    AStarNode* a_start = new AStarNode(start, 0, heuristic(start,end));
+    m_open_set.insert(a_start);
+    m_open_queue.push(a_start);
 
-    std::unordered_map<Node*,Node*> came_from;
+    std::unordered_map<AStarNode*,AStarNode*> came_from;
 
     // The return path
     std::vector<Node*> path;
@@ -21,15 +19,15 @@ std::vector<Node*> AStar::get_path
     while (m_open_queue.size() > 0)
     {
         // Get the first item in the min-heap
-        Node* current = m_open_queue.top();
+        AStarNode* current = m_open_queue.top();
         m_open_set.erase(current);
         m_open_queue.pop();
 
         // Short-circuit for the end
-        if (!current->is_seen())
+        if (!current->m_node->is_seen())
         {
-            int dist = std::abs(current->x - end->x) + std::abs(current->y - end->y);
-            if (AStarNodeData* data = static_cast<AStarNodeData*>(end->data))
+            int dist = std::abs(current->x() - end->x) + std::abs(current->y() - end->y);
+            if (AStarNode* data = static_cast<AStarNodeData*>(end->data))
             {
                 data->g_score = static_cast<AStarNodeData*>(current->data)->g_score + dist;
                 data->h_score = 0;

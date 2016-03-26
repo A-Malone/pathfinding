@@ -3,16 +3,16 @@
 
 #include "../common.hpp"
 
-#include "../core/world.hpp"
+#include "../core/map.hpp"
 
 class Solver
 {
 public:
-    virtual std::vector<Node*> get_path
+    virtual std::vector<MapNode*> get_path
     (
-        World& terrain,
-        Node* start,
-        Node* end
+        Map* terrain,
+        MapNode* start,
+        MapNode* end
     ) = 0;
 };
 

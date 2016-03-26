@@ -3,6 +3,7 @@
 
 #include "../common.hpp"
 #include "../core/solver.hpp"
+#include "../core/map.hpp"
 
 #include "priority_queue.hpp"
 
@@ -10,19 +11,19 @@
 class AStarNodeData : public NodeData
 {
 public:
-	AStarNodeData(float g, int h) : g_score(g), h_score(h) {};
+    AStarNodeData(float g, int h) : g_score(g), h_score(h) {};
 
-	float f_score() {return g_score + h_score;};
+    float f_score() {return g_score + h_score;};
 
-	int g_score;	// Real cost of getting from the start node to that node.
-	float h_score;	// Heuristic cost of getting from the start node to that node.
+    float g_score;    // Real cost of getting from the start node to that node.
+    float h_score;    // Heuristic cost of getting from the start node to that node.
 };
 
 struct node_cmp
 {
-    bool operator()(Node* a, Node* b)
+    bool operator()(MapNode* a, MapNode* b)
     {
-    	return static_cast<AStarNodeData*>(a->data)->f_score() > static_cast<AStarNodeData*>(b->data)->f_score();
+        return a->get_data<AStarNodeData>()->f_score() > b->get_data<AStarNodeData>()->f_score();
     }
 };
 
@@ -31,9 +32,9 @@ class AStar : Solver
 public:
     std::vector<Node*> get_path
     (
-        World& terrain,
-        Node* start,
-        Node* end
+        Map* terrain,
+        MapNode* start,
+        MapNode* end
     );
 
     std::unordered_set<Node*> m_closed_set;
@@ -45,7 +46,7 @@ public:
     float heuristic
     (
         Node* a,
-		Node* b
+        Node* b
     );
 
     std::vector<Node*> reconstruct_path

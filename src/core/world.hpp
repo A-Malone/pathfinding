@@ -9,11 +9,6 @@
 class World;
 class Unit;
 
-class NodeData
-{
-    // Base class
-};
-
 class Node
 {
     friend class World;

@@ -8,9 +8,9 @@ class RTAA : Solver
 public:
     std::vector<Node*> get_path
     (
-        World& terrain,
-        Node* start,
-        Node* end
+        Map* terrain,
+        MapNode* start,
+        MapNode* end
     );
 };
 

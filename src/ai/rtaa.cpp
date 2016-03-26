@@ -4,12 +4,12 @@
 
 std::vector<Node*> RTAA::get_path
 (
-    World& terrain,
-    Node* start,
-    Node* end
+    Map* terrain,
+    MapNode* start,
+    MapNode* end
 )
 {
-	AStar a_star;
+    AStar a_star;
     std::vector<Node*> path = a_star.get_path(terrain, start, end);
 
     // Failure condition, no path
@@ -28,5 +28,5 @@ std::vector<Node*> RTAA::get_path
                 - data->g_score;
     }
 
-	return path;
+    return path;
 }
