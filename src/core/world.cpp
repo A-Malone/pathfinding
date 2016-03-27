@@ -27,7 +27,7 @@ World::World
         m_map.push_back(col);
     }
 
-    float blob_average = 10.0 / 2500.0 * w * h;
+    float blob_average = 15.0 / 2500.0 * w * h;
 
     auto blobs_gen =
             std::bind(

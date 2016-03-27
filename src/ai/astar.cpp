@@ -20,6 +20,8 @@ std::vector<MapNode*> AStar::get_path
     m_open_set.insert(start);
     m_open_queue.push(start);
 
+    AStarNodeData* s_data = start->get_data<AStarNodeData>();
+
     std::unordered_map<MapNode*,MapNode*> came_from;
 
     // The return path
@@ -32,19 +34,21 @@ std::vector<MapNode*> AStar::get_path
         m_open_set.erase(current);
         m_open_queue.pop();
 
+        AStarNodeData* c_data = current->get_data<AStarNodeData>();
+
         // Short-circuit for the end
-        if (!current->is_seen())
+        if (!current->is_seen() && c_data->f_score() < s_data->f_score())
         {
             int dist = path_length(current, end);
             if (AStarNodeData* data = end->get_data<AStarNodeData>())
             {
-                data->g_score = current->get_data<AStarNodeData>()->g_score + dist;
+                data->g_score = data->g_score + dist;
                 data->h_score = 0;
             }
             else
             {
                 end->set_data<AStarNodeData>(
-                    new AStarNodeData(current->get_data<AStarNodeData>()->g_score + dist, 0)
+                    new AStarNodeData(c_data->g_score + dist, 0)
                 );
             }
             path = reconstruct_path(came_from, current);
@@ -68,9 +72,11 @@ std::vector<MapNode*> AStar::get_path
                 continue;       // Ignore the neighbor which is already evaluated.
             }
 
+            AStarNodeData* n_data = neighbor->get_data<AStarNodeData>();
+
             // The distance from start to goal passing through current and the neighbor.
-            int tentative_g_score = current->get_data<AStarNodeData>()->g_score + path_length(current,neighbor);
-            if (is_in_open_set && tentative_g_score >= neighbor->get_data<AStarNodeData>()->g_score)
+            int tentative_g_score = c_data->g_score + path_length(current,neighbor);
+            if (is_in_open_set && tentative_g_score >= n_data->g_score)
             {
                 continue;       // This is not a better path.
             }
@@ -78,10 +84,10 @@ std::vector<MapNode*> AStar::get_path
             // This path is the best until now. Record it!
             came_from[neighbor] = current;
 
-            if (AStarNodeData* data = neighbor->get_data<AStarNodeData>())
+            if (n_data)
             {
-                data->g_score = tentative_g_score;
-                data->h_score = heuristic(neighbor, end);
+                n_data->g_score = tentative_g_score;
+                n_data->h_score = heuristic(neighbor, end);
             }
             else
             {
@@ -137,8 +143,8 @@ namespace
 {
 float path_length(MapNode* start, MapNode* end)
 {
-    int dx = end->x() - start->x();
-    int dy = end->y() - start->y();
+    int dx = std::abs(end->x() - start->x());
+    int dy = std::abs(end->y() - start->y());
 
     return std::min(dx,dy) * std::sqrt(2) + std::abs(dx-dy);
 }

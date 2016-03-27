@@ -10,8 +10,8 @@
 
 int main()
 {
-    int w = 200;
-    int h = 200;
+    int w = 100;
+    int h = 100;
     // Set up terrain
     World* world = new World(w, h, 10);
     Map* map = new Map(world);
@@ -51,7 +51,7 @@ int main()
 
         // Step the world forward
         world->step();
-        std::this_thread::sleep_for(std::chrono::milliseconds(500));
+        //std::this_thread::sleep_for(std::chrono::milliseconds(10));
     }
 
     return 0;
