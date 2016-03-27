@@ -6,7 +6,7 @@
 class RTAA : Solver
 {
 public:
-    std::vector<Node*> get_path
+    std::vector<MapNode*> get_path
     (
         Map* terrain,
         MapNode* start,

@@ -2,7 +2,6 @@
 #define SOLVER_H
 
 #include "../common.hpp"
-
 #include "../core/map.hpp"
 
 class Solver

@@ -15,18 +15,17 @@ class Node
 
 public:
 
-    Node(int px, int py) :
-            data(nullptr)
+    Node(int px, int py)
     {
         x = px;
         y = py;
     }
 
+    std::pair<int,int> pos() const {return std::make_pair(x,y);};
+
     int x;
     int y;
     bool visited = false;
-
-    NodeData* data;
 
     bool is_wall() const
     {

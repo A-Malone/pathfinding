@@ -4,6 +4,7 @@
 
 #include "ai/astar.hpp"
 #include "ai/rtaa.hpp"
+#include "core/map.hpp"
 #include "core/world.hpp"
 #include "core/unit.hpp"
 
@@ -12,11 +13,12 @@ int main()
     int w = 200;
     int h = 200;
     // Set up terrain
-    World world(w, h, 10);
+    World* world = new World(w, h, 10);
+    Map* map = new Map(world);
 
     RTAA solver = RTAA();
 
-    Unit* unit = world.spawn(0,0);
+    Unit* unit = world->spawn(0,0);
 
     sf::RenderWindow window(sf::VideoMode(600, 600), "Pathfinding");
 
@@ -36,17 +38,19 @@ int main()
 
         window.clear();
 
-        world.render(window, side);
+        world->render(window, side);
         window.display();
 
-        std::vector<Node*> path = solver.get_path(
-            world,
-            world.at(unit->pos()),
-            world.at(w - 1, h - 1)
+        std::vector<MapNode*> path = solver.get_path(
+            map,
+            map->at(unit->pos()),
+            map->at(std::make_pair(w - 1, h - 1))
         );
-        unit->set_path(path);
+        std::vector<Node*> global_path = map->to_world_path(path);
+        unit->set_path(global_path);
 
-        world.step();
+        // Step the world forward
+        world->step();
         std::this_thread::sleep_for(std::chrono::milliseconds(500));
     }
 

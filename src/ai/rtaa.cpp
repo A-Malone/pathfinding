@@ -2,7 +2,7 @@
 
 #include "astar.hpp"
 
-std::vector<Node*> RTAA::get_path
+std::vector<MapNode*> RTAA::get_path
 (
     Map* terrain,
     MapNode* start,
@@ -10,7 +10,7 @@ std::vector<Node*> RTAA::get_path
 )
 {
     AStar a_star;
-    std::vector<Node*> path = a_star.get_path(terrain, start, end);
+    std::vector<MapNode*> path = a_star.get_path(terrain, start, end);
 
     // Failure condition, no path
     if (path.size() == 0)
@@ -19,11 +19,11 @@ std::vector<Node*> RTAA::get_path
     }
 
     // Update the closed path
-    for (Node* node : a_star.m_closed_set)
+    for (MapNode* node : a_star.m_closed_set)
     {
         // Update
-        AStarNodeData* data = static_cast<AStarNodeData*>(node->data);
-        data->h_score = static_cast<AStarNodeData*>(end->data)->g_score \
+        AStarNodeData* data = node->get_data<AStarNodeData>();
+        data->h_score = end->get_data<AStarNodeData>()->g_score \
                 + a_star.heuristic(node, end) \
                 - data->g_score;
     }

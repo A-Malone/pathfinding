@@ -1,6 +1,8 @@
 #ifndef SRC_CORE_UNIT_HPP_
 #define SRC_CORE_UNIT_HPP_
 
+#include "map.hpp"
+
 class Unit
 {
     // Allow the world to call the getter and setters for path

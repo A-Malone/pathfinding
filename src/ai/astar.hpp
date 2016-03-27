@@ -11,7 +11,7 @@
 class AStarNodeData : public NodeData
 {
 public:
-    AStarNodeData(float g, int h) : g_score(g), h_score(h) {};
+    AStarNodeData(float g, float h) : g_score(g), h_score(h) {};
 
     float f_score() {return g_score + h_score;};
 
@@ -30,29 +30,29 @@ struct node_cmp
 class AStar : Solver
 {
 public:
-    std::vector<Node*> get_path
+    std::vector<MapNode*> get_path
     (
         Map* terrain,
         MapNode* start,
         MapNode* end
     );
 
-    std::unordered_set<Node*> m_closed_set;
+    std::unordered_set<MapNode*> m_closed_set;
 
-    PriorityQueue<Node*, node_cmp> m_open_queue;
-    std::unordered_set<Node*> m_open_set;
+    PriorityQueue<MapNode*, node_cmp> m_open_queue;
+    std::unordered_set<MapNode*> m_open_set;
 
 
     float heuristic
     (
-        Node* a,
-        Node* b
+        MapNode* a,
+        MapNode* b
     );
 
-    std::vector<Node*> reconstruct_path
+    std::vector<MapNode*> reconstruct_path
     (
-        const std::unordered_map<Node*,Node*>& came_from,
-        Node* end
+        const std::unordered_map<MapNode*,MapNode*>& came_from,
+        MapNode* end
     );
 };
 
