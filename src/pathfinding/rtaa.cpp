@@ -1,6 +1,7 @@
-#include "rtaa.hpp"
-
 #include "astar.hpp"
+#include "../pathfinding/rtaa.hpp"
+
+#include "../pathfinding/astar.hpp"
 
 std::vector<MapNode*> RTAA::get_path
 (

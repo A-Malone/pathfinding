@@ -22,6 +22,7 @@ public:
     }
 
     std::pair<int,int> pos() const {return std::make_pair(x,y);};
+    point_t point() {return point_t(x,y);};
 
     int x;
     int y;
@@ -64,9 +65,10 @@ public:
     Unit* spawn(int x, int y);
 
     bool is_valid(int x, int y) const;
+    bool is_valid(const std::pair<int,int>& p) const {return is_valid(p.first, p.second);}
 
     Node* at(int x, int y) const;
-    Node* at(std::pair<int, int> p) const;
+    Node* at(const std::pair<int,int>& p) const;
 
     std::vector<Node*> neighbours(Node* node) const;
 

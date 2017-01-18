@@ -25,6 +25,11 @@ MapNode* Map::at(const std::pair<int,int>& pos)
     return map_node;
 }
 
+MapNode* Map::at(const point_t& pos)
+{
+   return at(std::pair<int,int>(pos.get<0>(), pos.get<1>()));
+}
+
 std::vector<MapNode*> Map::neighbours(MapNode* map_node)
 {
     std::vector<MapNode*> map_nodes;

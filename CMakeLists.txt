@@ -22,3 +22,8 @@ if(SFML_FOUND)
   include_directories(${SFML_INCLUDE_DIR})
   target_link_libraries(${EXECUTABLE_NAME} ${SFML_LIBRARIES})
 endif()
+
+# Detect and add boost
+find_package( Boost 1.60 COMPONENTS program_options REQUIRED )
+include_directories( ${Boost_INCLUDE_DIR} )
+target_link_libraries( ${EXECUTABLE_NAME} ${Boost_LIBRARIES} )

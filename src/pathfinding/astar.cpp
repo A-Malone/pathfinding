@@ -1,4 +1,4 @@
-#include "astar.hpp"
+#include "./astar.hpp"
 
 // ANONYMOUS NAMESPACE
 

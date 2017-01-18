@@ -1,31 +1,40 @@
-#include "renderer.hpp"
-
 #include <SFML/Graphics.hpp>
 
-#include "ai/astar.hpp"
-#include "ai/rtaa.hpp"
+#include "analysis/RSR.hpp"
 #include "core/map.hpp"
 #include "core/world.hpp"
 #include "core/unit.hpp"
+#include "pathfinding/astar.hpp"
+#include "pathfinding/rtaa.hpp"
 
 int main()
 {
-    int w = 100;
-    int h = 100;
+    int w = 200;
+    int h = 200;
+
+    float scale = 3;
+
     // Set up terrain
-    World* world = new World(w, h, 10);
+    World* world = new World(w, h);
     Map* map = new Map(world);
 
+    // The actual pathfinder
     RTAA solver = RTAA();
 
+    // A reduction on the map
+    RSR rsr = RSR();
+    rsr.update(world);
+
+    // The unit that we will be navigating with
     Unit* unit = world->spawn(0,0);
 
-    sf::RenderWindow window(sf::VideoMode(600, 600), "Pathfinding");
+    // Render window
+    sf::RenderWindow window(sf::VideoMode(w*scale, h*scale), "Pathfinding");
 
-    // Limit the framerate to 60 frames per second (this step is optional)
-    window.setFramerateLimit(60);
+    // Limit the framerate to 20 frames per second (this step is optional)
+    window.setFramerateLimit(20);
 
-    int side = 3;
+    int frame_count = 0;
 
     while (window.isOpen())
     {
@@ -38,7 +47,10 @@ int main()
 
         window.clear();
 
-        world->render(window, side);
+        world->render(window, scale);
+        rsr.render(&window, scale);
+
+
         window.display();
 
         std::vector<MapNode*> path = solver.get_path(
@@ -51,8 +63,10 @@ int main()
 
         // Step the world forward
         world->step();
-        //std::this_thread::sleep_for(std::chrono::milliseconds(10));
+
+        ++frame_count;
     }
 
     return 0;
 }
+
