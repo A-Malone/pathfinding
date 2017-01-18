@@ -22,6 +22,7 @@ public:
     }
 
     std::pair<int,int> pos() const {return std::make_pair(x,y);};
+    point_t point() {return point_t(x,y);};
 
     int x;
     int y;

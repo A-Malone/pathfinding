@@ -34,7 +34,7 @@ public:
 
 private:
     box_t m_rect;
-    std::vector<ReductionNode> m_edge_cells;
+    //std::vector<ReductionNode> m_edge_cells;
 };
 
 class RSR : Reduction

@@ -13,6 +13,7 @@ class Node;
 
 // CLASS DEFINITIONS
 
+/*
 class ReductionNode
 {
 public:
@@ -41,6 +42,7 @@ private:
 
     float m_cost;
 };
+*/
 
 
 class Reduction

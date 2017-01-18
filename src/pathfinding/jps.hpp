@@ -1,9 +1,9 @@
 #ifndef JPS_H
 #define JPS_H
 
-#include "../core/solver.hpp"
+#include "astar.hpp"
 
-class JPS : Solver
+class JPS : AStar
 {
 public:
     std::vector<MapNode*> get_path
@@ -11,7 +11,7 @@ public:
         Map* terrain,
         MapNode* start,
         MapNode* end
-    );
+    ) override;
 };
 
 #endif

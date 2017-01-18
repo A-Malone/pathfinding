@@ -26,6 +26,7 @@ public:
 
     int x() const {return m_node->x;};
     int y() const {return m_node->y;};
+    point_t point() {return m_node->point();};
 
     template <class T>
     T* get_data() const {return static_cast<T*>(m_data);};
@@ -48,11 +49,14 @@ public:
 
     // Map dimensions
     bool is_valid(const std::pair<int,int> pos) const {return m_world->is_valid(pos.first, pos.second);};
+    bool is_valid(const point_t point) const {return m_world->is_valid(point.get<0>(), point.get<1>());};
+
     int width() const {return m_world->width();};
     int height() const {return m_world->height();};
 
     // Node access
     MapNode* at(const std::pair<int,int>& pos);
+    MapNode* at(const point_t& pos);
     std::vector<MapNode*> neighbours(MapNode* node);
 
     std::vector<Node*> to_world_path(const std::vector<MapNode*> path) const;
