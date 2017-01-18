@@ -118,6 +118,7 @@
 		<configuration configurationName="Default">
 			<resource resourceType="PROJECT" workspacePath="/pathfinding"/>
 		</configuration>
+		<configuration configurationName="Debug"/>
 	</storageModule>
 	<storageModule moduleId="org.eclipse.cdt.internal.ui.text.commentOwnerProjectMappings"/>
 	<storageModule moduleId="scannerConfiguration">
