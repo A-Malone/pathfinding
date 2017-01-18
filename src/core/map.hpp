@@ -35,6 +35,7 @@ public:
     void set_data(T* data) {m_data = static_cast<NodeData*>(data);};
 
     bool is_seen() const {return m_node->is_seen();};
+    bool is_wall() const {return m_node->is_wall();};
 
 protected:
     NodeData* m_data;

@@ -146,7 +146,7 @@ std::vector<MapNode*> get_successors(Map* map, MapNode* node, MapNode* goal)
 MapNode* jump(Map* map, MapNode* x, point_t vec, MapNode* goal)
 {
     
-    point_t next_point = node.point() + vec;
+    point_t next_point = node->point() + vec;
     if(!map->is_valid(next_point))
     {
         return nullptr;
@@ -162,7 +162,7 @@ MapNode* jump(Map* map, MapNode* x, point_t vec, MapNode* goal)
     
     // Check to see if this node should be a jump point based on whether it's
     // the goal or an unseen point 
-    if(node == goal || !node.is_seen())
+    if(node == goal || !node->is_seen())
     {
         return node;
     }
@@ -192,7 +192,7 @@ MapNode* jump(Map* map, MapNode* x, point_t vec, MapNode* goal)
         }
     }
 
-    return jump(map, node, dir, goal);
+    return jump(map, node, vec, goal);
 }
 
 bool is_exp_forced(Map* map, MapNode* node, point_t vec)
@@ -206,10 +206,10 @@ bool is_exp_forced(Map* map, MapNode* node, point_t vec)
         point_t inverse = point_t(vec.get<1>(), vec.get<0>());
         point_t p;
 
-        p = node.point() + inverse;
+        p = node->point() + inverse;
         forced = forced || (map->is_valid(p) && map->at(p)->is_wall());
 
-        p = node.point() - inverse;
+        p = node->point() - inverse;
         forced = forced || (map->is_valid(p) && map->at(p)->is_wall());
     }
     else    // Diagonal expansion
@@ -217,10 +217,10 @@ bool is_exp_forced(Map* map, MapNode* node, point_t vec)
         // Check inverse components of motion for walls
         point_t p;
 
-        p = node.point() - point_t(0, vec.get<1>());
+        p = node->point() - point_t(0, vec.get<1>());
         forced = forced || (map->is_valid(p) && map->at(p)->is_wall());
 
-        p = node.point() - point_t(vec.get<0>(), 0);
+        p = node->point() - point_t(vec.get<0>(), 0);
         forced = forced || (map->is_valid(p) && map->at(p)->is_wall());
     }
 
