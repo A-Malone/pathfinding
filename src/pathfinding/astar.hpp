@@ -5,7 +5,7 @@
 #include "../core/solver.hpp"
 #include "../core/map.hpp"
 
-#include "priority_queue.hpp"
+#include "../pathfinding/priority_queue.hpp"
 
 
 class AStarNodeData : public NodeData

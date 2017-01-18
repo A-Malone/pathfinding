@@ -40,6 +40,7 @@ protected:
     Node* m_node;
 };
 
+
 class Map
 {
 public:
